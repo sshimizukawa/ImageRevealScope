@@ -1,62 +1,43 @@
-// canvas要素を取得
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+export class Loupe {
+  constructor(canvas, backgroundImage, frontImage) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
+    this.backgroundImage = backgroundImage;
+    this.frontImage = frontImage;
 
-const backgroundImage = new Image();
-const frontImage = new Image();
-let animationId;
+    this.mouseX = 0;
+    this.mouseY = 0;
 
-backgroundImage.src = "assets/img/1.png";
-frontImage.src = "assets/img/2.png";
+    this.canvas.addEventListener("mousemove", (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      this.mouseX = e.clientX - rect.left;
+      this.mouseY = e.clientY - rect.top;
+    });
+  }
 
-const backgroundLoaded = new Promise((resolve) => {
-  backgroundImage.onload = function () {
-    resolve();
-    console.log("backgroundImage");
+  draw = () => {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.fillStyle = "gray";
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.ctx.drawImage(this.backgroundImage, 0, 0);
+
+    this.ctx.save();
+    this.ctx.beginPath();
+    this.ctx.rect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.arc(this.mouseX, this.mouseY, 50, 0, Math.PI * 2, true);
+    this.ctx.clip();
+    this.ctx.drawImage(this.frontImage, 0, 0);
+    this.ctx.restore();
+
+    this.animationId = requestAnimationFrame(this.draw);
   };
-  backgroundImage.src = "assets/img/1.png";
-});
 
-const frontLoaded = new Promise((resolve) => {
-  frontImage.onload = function () {
-    resolve();
-    console.log("frontImage");
+  play = () => {
+    this.animationId = requestAnimationFrame(this.draw);
   };
-  frontImage.src = "assets/img/2.png";
-});
 
-Promise.all([backgroundLoaded, frontLoaded]).then(() => {
-  animationId = requestAnimationFrame(draw);
-  console.log("Promise.all");
-});
-
-let mouseX = 0;
-let mouseY = 0;
-
-mouseX = 250;
-mouseY = 250;
-
-canvas.addEventListener("mousemove", function (e) {
-  const rect = canvas.getBoundingClientRect();
-  mouseX = e.clientX - rect.left;
-  mouseY = e.clientY - rect.top;
-});
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "gray";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.drawImage(backgroundImage, 0, 0);
-
-  // 穴の空いたfrontImageを描画。
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(0, 0, canvas.width, canvas.height);
-  ctx.arc(mouseX, mouseY, 50, 0, Math.PI * 2, true);
-  ctx.clip();
-  ctx.drawImage(frontImage, 0, 0);
-  ctx.restore();
-
-  animationId = requestAnimationFrame(draw);
+  stop = () => {
+    cancelAnimationFrame(this.animationId);
+  };
 }
