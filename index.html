@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <title>ImageRevealScope</title>
   </head>
   <body>
     <div id="main">
@@ -14,6 +15,44 @@
         style="border: 1px solid #000000"
       ></canvas>
       <script type="module" src="js/main.js"></script>
+    </div>
+    <div>
+      <div>
+        <ul>
+          <li>
+            <label for="front-image-url">front image URL</label>
+            <input
+              id="front-image-url"
+              type="text"
+              placeholder="https://pbs.twimg.com/media/ABCDEF?format=jpg&name=large"
+              class="w-full"
+            />
+          </li>
+          <li>
+            <label for="back-image-url">back image URL</label>
+            <input
+              id="back-image-url"
+              type="text"
+              placeholder="https://pbs.twimg.com/media/ABCDEF?format=jpg&name=large"
+              class="w-full"
+            />
+          </li>
+        </ul>
+        <div>
+          <button id="load">load image</button>
+        </div>
+        <br />
+        <div>
+          <label for="current-url">share URL</label>
+          <input
+            id="current-url"
+            type="text"
+            class="w-full"
+            placeholder="ここに表示されるURLで共有できます"
+            disabled
+          />
+        </div>
+      </div>
     </div>
   </body>
 </html>
